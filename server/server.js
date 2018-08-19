@@ -15,11 +15,30 @@ io.on('connection',(socket) => {
 	socket.on('disconnect',() => {
 	console.log('user is disconnected');
 });
+	socket.emit('newEmail', {
+		from:'urvashi@gmail.com',
+		text : 'my email address',
+		createdAt:123
+	});
+
+	socket.on('createdEmail', function(emaildata) {
+		console.log('emaildata' , emaildata);
+	});
+
+	socket.on('clientmsg', function(msg) {
+		console.log('Client messgae' , msg);
+	});
+
+	socket.emit('servermessage' , {
+		from: 'server',
+		messgae: 'hello'
+	});
 });
 
 
 
 const port = process.env.PORT || 3000;
+
 app.use(express.static(publicpath));
 server.listen(port ,()=>{
 	console.log("Server started");
