@@ -27,12 +27,17 @@ io.on('connection',(socket) => {
 
 	socket.on('clientmsg', function(msg) {
 		console.log('Client messgae' , msg);
+
+		io.emit('servermessage' , {
+			from : msg.from,
+			text : msg.msg
+			});
 	});
 
-	socket.emit('servermessage' , {
-		from: 'server',
-		messgae: 'hello'
-	});
+	// socket.emit('servermessage' , {
+	// 	from: 'server',
+	// 	messgae: 'hello'
+	// });
 });
 
 
