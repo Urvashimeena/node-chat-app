@@ -7,19 +7,23 @@ var socket = io();
 	console.log('disconnected to server');
 	});
 
-	socket.on('newEmail', function(email) {
-		console.log('new Email' ,email);
-	});
+	// socket.on('newEmail', function(email) {
+	// 	console.log('new Email' ,email);
+	// });
 
-	socket.emit('createdEmail', {
-		to:'urvashi1998@gmail.com',
-		text : 'my email address',
-	});
+	// socket.emit('createdEmail', {
+	// 	to:'urvashi1998@gmail.com',
+	// 	text : 'my email address',
+	// });
 
 	socket.on( 'servermessage' , function(message) {
 		console.log('new message from server' , message);
 	});
 
+	socket.on( 'Adminmessage' , function(message) {
+		console.log('Admin' , message);
+		
+	});
 	// socket.emit('clientmsg' , {
 	// 	from: 'client',
 	// 	msg : "hii"
