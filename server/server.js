@@ -32,14 +32,15 @@ io.on('connection',(socket) => {
 	// });
 
 
-		socket.emit('Adminmessage' , generateMessage("Admin" , "Welcome to chat App"));
+	socket.emit('servermessage' , generateMessage("Admin" , "Welcome to chat App"));
 
-	socket.broadcast.emit('Adminmessage',generateMessage('Admin' , 'New User is connected'));
+	socket.broadcast.emit('servermessage',generateMessage('Admin' , 'New User is connected'));
 
-	socket.on('clientmsg', function(msg) {
+	socket.on('clientmsg', function(msg, callback) {
 		console.log('Client messgae' , msg);
 
-		io.emit('servermessage' , generateMessage(messgae.from,messgae.msg));
+		io.emit('servermessage' , generateMessage(msg.from,msg.msg));
+		callback("This is from server");
 		// socket.broadcast.emit('servermessage', {
 		// 	from:msg.from,
 		// 	text:msg.msg

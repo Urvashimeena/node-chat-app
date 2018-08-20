@@ -18,13 +18,24 @@ var socket = io();
 
 	socket.on( 'servermessage' , function(message) {
 		console.log('new message from server' , message);
+		var li = jQuery('<li></li>')
+		li.text(`${message.from}: ${message.text}`);
+		jQuery('#messages').append(li);
 	});
 
-	socket.on( 'Adminmessage' , function(message) {
-		console.log('Admin' , message);
+	// socket.on( 'Adminmessage' , function(message) {
+	// 	console.log('Admin' , message);
 		
-	});
-	// socket.emit('clientmsg' , {
-	// 	from: 'client',
-	// 	msg : "hii"
 	// });
+	
+
+	jQuery('#message-form').on('submit',function(e) {
+		e.preventDefault();
+
+		socket.emit('clientmsg' , {
+		from: 'User',
+		msg : jQuery('[name = message]').val()
+		}, function () {
+			
+		});
+	});
