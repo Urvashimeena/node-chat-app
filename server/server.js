@@ -4,7 +4,7 @@ const express = require('express');
 const http = require('http');
 var app = express();
 const publicpath = path.join(__dirname , '..' , '/public');
-const {generateMessage} = require('./utils/message.js');
+const {generateMessage, generateLocationMessage} = require('./utils/message.js');
 
 var server = http.createServer(app);
 var io = socketIO(server);
@@ -34,6 +34,11 @@ io.on('connection',(socket) => {
 
 	socket.emit('servermessage' , generateMessage("Admin" , "Welcome to chat App"));
 
+	socket.on('createlocationmessage' , (coords) => {
+	io.emit('newlocationmessage' , generateLocationMessage('Admin' , `${coords.latitude}, ${coords.longitude}`));
+});
+
+
 	socket.broadcast.emit('servermessage',generateMessage('Admin' , 'New User is connected'));
 
 	socket.on('clientmsg', function(msg, callback) {
@@ -52,7 +57,6 @@ io.on('connection',(socket) => {
 	// 	messgae: 'hello'
 	// });
 });
-
 
 
 const port = process.env.PORT || 3000;
