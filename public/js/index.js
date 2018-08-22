@@ -17,9 +17,10 @@ var socket = io();
 	// });
 
 	socket.on( 'servermessage' , function(message) {
+		var formattedtime = moment(message.createdAt).format('h:mm a');
 		console.log('new message from server' , message);
 		var li = jQuery('<li></li>')
-		li.text(`${message.from}: ${message.text}`);
+		li.text(`${message.from} ${formattedtime} : ${message.text}`);
 		jQuery('#messages').append(li);
 	});
 
@@ -47,7 +48,6 @@ var socket = io();
 		locationButton.attr('disabled', 'disabled').text('Sending location...');
 		navigator.geolocation.getCurrentPosition(function(position)
 		{	
-			locationButton.removeAttr('disabled').text('Send location');
 			socket.emit('createlocationmessage' , {
 				latitude:position.coords.latitude,
 				longitude:position.coords.longitude
@@ -60,9 +60,10 @@ var socket = io();
 
 
 		socket.on( 'newlocationmessage' , function(message) {
+		var formattedtime = moment(message.createdAt).format('h:mm a');
 		var li = jQuery('<li></li>')
 		var a = jQuery('<a target="_blank">My current location</a>');
-		li.text(`${message.from}: `);
+		li.text(`${message.from} ${formattedtime} : `);
 		a.attr('href' , message.url);
 		li.append(a);
 		jQuery('#messages').append(li);
