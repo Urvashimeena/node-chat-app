@@ -27,20 +27,37 @@ var socket = io();
 
 
 	socket.on('connect' , () => {
-	console.log('connected to server');
+		
+		var param = jQuery.deparam(window.location.search);
+
+		socket.emit('join',param,function(err)
+		{
+			if(err)
+			{
+				alert(err);
+				window.location.href('/');
+			}
+			else
+			{
+				console.log('no err');
+			}
+		});
 	});
+
+
 	socket.on('disconnect' , () => {
 	console.log('disconnected to server');
 	});
 
-	// socket.on('newEmail', function(email) {
-	// 	console.log('new Email' ,email);
-	// });
+	socket.on('updateuserList', function(users) {
+		var ol = jQuery('<ol></o>');
 
-	// socket.emit('createdEmail', {
-	// 	to:'urvashi1998@gmail.com',
-	// 	text : 'my email address',
-	// });
+		users.forEach(function(user)
+		{
+			ol.append(jQuery('<li></li>').text(user));
+		});
+		jQuery('#users').html(ol);
+	});
 
 	socket.on( 'servermessage' , function(message) {
 		var formattedtime = moment(message.createdAt).format('h:mm a');

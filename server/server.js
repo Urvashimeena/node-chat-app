@@ -6,16 +6,27 @@ const time = require('../playground/time.js');
 var app = express();
 const publicpath = path.join(__dirname , '..' , '/public');
 const {generateMessage, generateLocationMessage} = require('./utils/message.js');
-
+const {isRealString} = require('./utils/validation.js');
+const {Users} = require('./utils/users.js')
 var server = http.createServer(app);
 var io = socketIO(server);
+
+
+var users = new Users();
 
 io.on('connection',(socket) => {
 	console.log('new user is connected');
 
+
 	socket.on('disconnect',() => {
-	console.log('user is disconnected');
-});
+		var user = users.removeUser(socket.id);
+
+		if(user)
+		{
+			io.to(user.room).emit('updateuserList' , users.getUserList(user.room));
+			io.to(user.room).emit('servermessage' , generateMessage('Admin' ,`${user.name} has left`));
+		}
+	});
 	// socket.emit('newEmail', {
 	// 	from:'urvashi@gmail.com',
 	// 	text : 'my email address',
@@ -26,21 +37,31 @@ io.on('connection',(socket) => {
 		console.log('emaildata' , emaildata);
 	});
 
-	// socket.emit('Adminmessage' , {
-	// 	from:'Admin',
-	// 	text:'Welcome to chat App',
-	// 	createdAt : new Date().getTime()
-	// });
+	socket.on('join',(param,callback) => {
+
+		if(!isRealString(param.name) || !isRealString(param.room))
+		{
+			return callback('Name and room name is required');
+		}
+
+		socket.join(param.room);
+		users.removeUser(socket.id);
+		users.addUsers(socket.id , param.name , param.room);
+		io.to(param.room).emit('updateuserList' , users.getUserList(param.room));
+		socket.emit('servermessage' , generateMessage("Admin" , "Welcome to chat App"));
+		socket.broadcast.to(param.room).emit('servermessage',generateMessage('Admin' , `${param.name} has joined`));
+		callback();
+	});
 
 
-	socket.emit('servermessage' , generateMessage("Admin" , "Welcome to chat App"));
+
 
 	socket.on('createlocationmessage' , (coords) => {
 	io.emit('newlocationmessage' , generateLocationMessage('Admin' , `${coords.latitude}, ${coords.longitude}`));
 });
 
 
-	socket.broadcast.emit('servermessage',generateMessage('Admin' , 'New User is connected'));
+	
 
 	socket.on('clientmsg', function(msg, callback) {
 		console.log('Client messgae' , msg);
