@@ -81,7 +81,6 @@ var socket = io();
 		e.preventDefault();
 		var messagetextbox =  jQuery('[name = message]');
 		socket.emit('clientmsg' , {
-		from: 'User',
 		msg : messagetextbox.val()
 		}, function () {
 			messagetextbox.val(''); 
