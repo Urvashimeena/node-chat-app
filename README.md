@@ -7,7 +7,11 @@ It is done using socket.io
 ``intergrate it with socketio by installing socket io first
   npm install --save socket.io
   
-  ![alt text](http://url/to/img.png)
+  
+  Below is the screenshots of application
+   ![alt text](https://github.com/Urvashimeena/node-chat-app/blob/master/screenshots/Screenshot%20(104).png)
+    ![alt text](https://github.com/Urvashimeena/node-chat-app/blob/master/screenshots/Screenshot%20(103).png)
+  ![alt text](https://github.com/Urvashimeena/node-chat-app/blob/master/screenshots/Screenshot%20(105).png)
   
 
 
